@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.nikolaev.eshop.model.Category;
-import ru.nikolaev.eshop.model.Product;
 import ru.nikolaev.eshop.service.CategoryService;
 
 import java.util.List;
