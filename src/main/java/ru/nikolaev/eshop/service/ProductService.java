@@ -17,13 +17,36 @@ public class ProductService {
         return productRepository.findByCategoryId(categoryId);
     }
 
-    // Метод для получения всех продуктов
+    // Получить все продукты
     public List<Product> getAllProducts() {
         return productRepository.findAll();
     }
 
+    // Получить продукт по ID
     public Product getProductById(Long id) {
         return productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found"));
     }
 
+    // Создать новый продукт
+    public Product createProduct(Product product) {
+        return productRepository.save(product);
+    }
+
+    // Обновить продукт
+    public Product updateProduct(Long id, Product updatedProduct) {
+        Product existingProduct = getProductById(id);
+        existingProduct.setName(updatedProduct.getName());
+        existingProduct.setDescription(updatedProduct.getDescription());
+        existingProduct.setImageUrl(updatedProduct.getImageUrl());
+        existingProduct.setStock(updatedProduct.getStock());
+        existingProduct.setPrice(updatedProduct.getPrice());
+        existingProduct.setDiscountPrice(updatedProduct.getDiscountPrice());
+        existingProduct.setCategory(updatedProduct.getCategory());
+        return productRepository.save(existingProduct);
+    }
+
+    // Удалить продукт
+    public void deleteProduct(Long id) {
+        productRepository.deleteById(id);
+    }
 }
