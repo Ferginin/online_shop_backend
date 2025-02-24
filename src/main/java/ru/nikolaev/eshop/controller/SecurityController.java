@@ -61,6 +61,7 @@ public class SecurityController {
         user.setUsername(signupRequest.getUsername());
         user.setPassword(hashedPassword);
         user.setEmail(signupRequest.getEmail());
+        user.setRole("ROLE_USER");
 
         userRepository.save(user);
 
@@ -70,10 +71,17 @@ public class SecurityController {
 
     @PostMapping("/signin")
     ResponseEntity<?> signin(@RequestBody SigninRequest signinRequest) {
+        Authentication authentication = null;
         try {
+//            System.out.println("Username: " + signinRequest.getUsername());
+//            System.out.println("Password: " + signinRequest.getPassword());
+
             // Загрузите пользователя из базы данных
             User user = userRepository.findUserByUsername(signinRequest.getUsername())
                     .orElseThrow(() -> new BadCredentialsException("User not found"));
+
+//            System.out.println("Stored password: " + user.getPassword());
+//            System.out.println("Password matches: " + passwordEncoder.matches(signinRequest.getPassword(), user.getPassword()));
 
             // Проверьте соответствие пароля
             if (!passwordEncoder.matches(signinRequest.getPassword(), user.getPassword())) {
@@ -81,8 +89,11 @@ public class SecurityController {
             }
 
             // Аутентификация пользователя
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(signinRequest.getUsername(), signinRequest.getPassword())
+            authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            signinRequest.getUsername(),
+                            signinRequest.getPassword()
+                    )
             );
 
             SecurityContextHolder.getContext().setAuthentication(authentication);

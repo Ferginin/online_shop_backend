@@ -1,4 +1,4 @@
-package ru.nikolaev.eshop.security;
+package ru.nikolaev.eshop.conf;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -17,17 +17,18 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
+import ru.nikolaev.eshop.security.TokenFilter;
 import ru.nikolaev.eshop.service.UserService;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfigurator {
+public class SecurityConfig {
 
     private final TokenFilter tokenFilter;
     private final UserService userService;
 
     @Autowired
-    public SecurityConfigurator(TokenFilter tokenFilter, UserService userService) {
+    public SecurityConfig(TokenFilter tokenFilter, UserService userService) {
         this.tokenFilter = tokenFilter;
         this.userService = userService;
     }
@@ -59,7 +60,7 @@ public class SecurityConfigurator {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/secured/user").fullyAuthenticated()
-                        .anyRequest().permitAll()
+                        .anyRequest().authenticated()
                 )
                 .addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class);
 

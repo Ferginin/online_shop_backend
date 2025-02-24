@@ -11,9 +11,11 @@ import java.security.Principal;
 public class MainController {
     @GetMapping("/user")
     public String userAccess(Principal principal) {
-        if(principal == null) {
-            return null;
+        if (principal == null) {
+            System.out.println("Principal is null");
+            return "Unauthorized";
         }
+        System.out.println("Authenticated user: " + principal.getName());
         return principal.getName();
     }
 }

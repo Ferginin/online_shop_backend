@@ -2,10 +2,12 @@ package ru.nikolaev.eshop.security;
 
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import ru.nikolaev.eshop.model.User;
 
 import java.util.Collection;
+import java.util.Collections;
 
 @Data
 public class UserDetailsIMpl implements UserDetails {
@@ -14,26 +16,30 @@ public class UserDetailsIMpl implements UserDetails {
     private String username;
     private String password;
     private String email;
+    private String role;
 
-    public UserDetailsIMpl(Long id, String username, String password, String email) {
+    public UserDetailsIMpl(Long id, String username, String password, String email, String role) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.email = email;
+        this.role = role;
     }
 
     public static UserDetailsIMpl build(User user) {
         return new UserDetailsIMpl(
                 user.getUser_id(),
                 user.getUsername(),
+                user.getPassword(),
                 user.getEmail(),
-                user.getPassword());
+                user.getRole()
+        );
     }
 
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return Collections.singletonList(new SimpleGrantedAuthority(role));
     }
 
     @Override

@@ -12,10 +12,14 @@ import ru.nikolaev.eshop.repository.UserRepository;
 import java.util.List;
 
 @Service
-public class UserService  implements UserDetailsService {
+public class UserService implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
+
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     public User findByEmail(String email) {
         return userRepository.findUserByEmail(email);
@@ -58,7 +62,8 @@ public class UserService  implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findUserByUsername(username).orElseThrow(() -> new UsernameNotFoundException(
+        User user = userRepository.findUserByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException(
                 String.format("User '%s' not found", username)
         ));
         return UserDetailsIMpl.build(user);
